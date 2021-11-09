@@ -21,12 +21,7 @@ public class CashRegisterProcessorTest {
         MockitoAnnotations.initMocks(this);
         crProcessor = new CashRegisterProcessor(cashRegister);
     }
-    @Test
-    public void testExitCommand() throws InvalidCommandException, InsufficientFundException, RollbackException {
-        crProcessor.execute("Exit");
-        // should not reach this part of code on exit
-        Assert.assertTrue(false);
-    }
+
     @Test
     public void testShowCommandShouldCallShowMethod() throws InvalidCommandException, InsufficientFundException, RollbackException {
         crProcessor.execute("Show");
