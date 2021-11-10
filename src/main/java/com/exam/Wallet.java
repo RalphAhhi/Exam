@@ -2,9 +2,8 @@ package com.exam;
 
 import com.exam.exception.InsufficientFundException;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Wallet {
 
@@ -16,7 +15,7 @@ public class Wallet {
             walletItem = new WalletItem(denomination);
         }
         walletItem.setCount(walletItem.getCount() + count);
-        walletItemByDenomincation.put(denomination,walletItem);
+        walletItemByDenomincation.put(denomination, walletItem);
     }
 
     public void subtractDenominationCount(Denomination denomination, Integer count) throws InsufficientFundException {
@@ -47,5 +46,29 @@ public class Wallet {
     public Integer getTotalWalletAmount() {
         return walletItemByDenomincation.values().stream().filter(Objects::nonNull).map(
                 walletItem -> walletItem.getTotal()).reduce((a, b) -> a + b).get();
+    }
+
+    public Integer deduct(Wallet changeWallet, Denomination denomination, int amount) {
+        WalletItem item = getWalletItemByDenomination(denomination);
+        int countToDeduct = amount / item.getDenomination().getValue();
+
+        if (countToDeduct > item.getCount()) {
+            countToDeduct = item.getCount();
+        }
+        int newCount = item.getCount() - countToDeduct;
+
+        item.setCount(newCount);
+        changeWallet.addDenominationCount(denomination, countToDeduct);
+        return amount - (countToDeduct * denomination.getValue());
+
+    }
+
+    public Collection<WalletItem> getWalletItemsWithCount() {
+        return walletItemByDenomincation.values().stream().filter(item->item.getCount()>0).collect(Collectors.toList());
+    }
+
+    public List<Denomination> getDenominationWithCOunt() {
+        return walletItemByDenomincation.values().stream().filter(item->item.getCount()>0).map(i->i.getDenomination())
+                .collect(Collectors.toList());
     }
 }

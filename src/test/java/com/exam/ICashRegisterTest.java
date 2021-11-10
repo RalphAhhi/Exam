@@ -92,6 +92,13 @@ public class ICashRegisterTest {
         Assert.assertTrue(wallet.getTotalWalletAmount() == 5);
     }
 
+    @Test
+    public void testChange2() throws InsufficientFundException, RollbackException {
+        addWalletData(0, 0, 1, 4, 0);
+        cr.change(8);
+        Assert.assertTrue(wallet.getTotalWalletAmount() == 5);
+    }
+
     private void addWalletData(int twenty, int ten, int five, int two, int one) {
         wallet.addDenominationCount(Denomination.TWENTY, twenty);
         wallet.addDenominationCount(Denomination.TEN, ten);
